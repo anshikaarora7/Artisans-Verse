@@ -1,0 +1,245 @@
+{% extends "web/base.html" %}
+{% load static  %}
+{% block title %}Shop Here{% endblock  %}
+{% block content %}
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="./index.html"><i class="fa fa-home"></i> Home</a>
+                        <span>Shop</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+    <style>
+        .category-link {
+            color: #222;            /* Dark grey/black text */
+            font-size: 14px;        /* Smaller text */
+            font-weight: normal;    /* Remove boldness */
+            text-decoration: none;  /* No underline */
+            padding: 5px 5px;
+            display: inline-block;
+        }
+          
+        .category-link:hover {
+            color: #000;            /* Slightly darker on hover */
+            text-decoration: underline;
+        }
+    </style>
+    <!-- Shop Section Begin -->
+    <section class="shop spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <div class="shop__sidebar">
+                        <div class="sidebar__categories">
+                            {% comment %} <div class="section-title">
+                                <h4>Categories</h4>
+                            </div> {% endcomment %}
+                            {% comment %} <div class="categories__accordion">
+                                <div class="accordion" id="accordionExample">
+                                    <div class="card">
+                                        <div class="card-heading active">
+                                            <a data-toggle="collapse" data-target="#collapseOne">Women</a>
+                                        </div>
+                                        <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <ul>
+                                                    <li><a href="#">Fine Art</a></li>
+                                                    <li><a href="#">Pottery</a></li>
+                                                    <li><a href="#">Potrait</a></li>
+                                                    <li><a href="#">Landscapes</a></li>
+                                                    <li><a href="#">Sketches</a></li>
+                                                    <li><a href="#">Sculptures</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseTwo">Men</a>
+                                        </div>
+                                        <div id="collapseTwo" class="collapse" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <ul>
+                                                    <li><a href="#">Coats</a></li>
+                                                    <li><a href="#">Jackets</a></li>
+                                                    <li><a href="#">Dresses</a></li>
+                                                    <li><a href="#">Shirts</a></li>
+                                                    <li><a href="#">T-shirts</a></li>
+                                                    <li><a href="#">Jeans</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseThree">Kids</a>
+                                        </div>
+                                        <div id="collapseThree" class="collapse" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <ul>
+                                                    <li><a href="#">Coats</a></li>
+                                                    <li><a href="#">Jackets</a></li>
+                                                    <li><a href="#">Dresses</a></li>
+                                                    <li><a href="#">Shirts</a></li>
+                                                    <li><a href="#">T-shirts</a></li>
+                                                    <li><a href="#">Jeans</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseFour">Accessories</a>
+                                        </div>
+                                        <div id="collapseFour" class="collapse" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <ul>
+                                                    <li><a href="#">Coats</a></li>
+                                                    <li><a href="#">Jackets</a></li>
+                                                    <li><a href="#">Dresses</a></li>
+                                                    <li><a href="#">Shirts</a></li>
+                                                    <li><a href="#">T-shirts</a></li>
+                                                    <li><a href="#">Jeans</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseFive">Cosmetic</a>
+                                        </div>
+                                        <div id="collapseFive" class="collapse" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <ul>
+                                                    <li><a href="#">Coats</a></li>
+                                                    <li><a href="#">Jackets</a></li>
+                                                    <li><a href="#">Dresses</a></li>
+                                                    <li><a href="#">Shirts</a></li>
+                                                    <li><a href="#">T-shirts</a></li>
+                                                    <li><a href="#">Jeans</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>{% endcomment %}
+                        </div> 
+                        {% comment %} <div class="sidebar__filter">
+                            <div class="section-title">
+                                <h4>Shop by price</h4>
+                            </div>
+                            <div class="filter-range-wrap">
+                                <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
+                                data-min="33" data-max="99"></div>
+                                <div class="range-slider">
+                                    <div class="price-input">
+                                        <p>Price:</p>
+                                        <input type="text" id="minamount">
+                                        <input type="text" id="maxamount">
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">Filter</a>
+                        </div> {% endcomment %}
+
+                       
+                        {% if categorys %}
+                        <div class="sidebar__sizes">
+                            <div class="section-title">
+                                <h4>Shop by Catgory</h4>
+                            </div>
+                            <div class="size__list">
+                                {% for category in categorys  %}
+                                <label for="xxs">
+                                    {% if category.parent_cat is None %}
+                                    
+                                    <a href="/shop/{{category.id}}/0/0" class="category-link" style="text-decoration:none">{{category.cat_name}}</a>
+                                    {% else %}
+                                    <a href="/shop/{{category.parent_cat}}/{{category.id}}/0" class="category-link" style="text-decoration:none">{{category.cat_name}}</a>
+                                    {% endif %}
+                                    {% comment %} <input type="checkbox" id="xxs"> {% endcomment %}
+                                    {% comment %} <span class="checkmark"></span> {% endcomment %}
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="sidebar__color">
+                            <div class="section-title">
+                                <h4>Shop by Brand</h4>
+                            </div>
+                            {% if brands %}
+                            <div class="size__list color__list">
+                                {% for brand in brands  %}
+                                <label for="black">
+                                    <a href="#" class="category-link" style="text-decoration:none">{{brand.name}}</a>
+                                    {% comment %} <input type="checkbox" id="black"> {% endcomment %}
+                                    {% comment %} <span class="checkmark"></span> {% endcomment %}
+                                </label>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-9">
+                    <div class="row">
+                        {% if products %}
+                        {% for product in products %}
+
+                        <div class="col-lg-4 col-md-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="{{product.image}}">
+                                    <div class="label new">New</div>
+                                    <ul class="product__hover">
+                                        {% comment %} <li><a href="{{product.image}}" class="image-popup"><span class="arrow_expand"></span></a></li> {% endcomment %}
+                                        {% comment %} <li><a href="#"><span class="icon_heart_alt"></span></a></li> {% endcomment %}
+                                        <li><a href="{%url 'shop_detail' product.id %}"><span class="icon_bag_alt"></span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="#">{{product.prod_name}}</a></h6>
+                                    {% with full_stars=product.stars|floatformat:0 half_star=product.stars|floatformat:1 %}
+                                            <div class="rating">
+                                                {% for i in "12345" %}
+                                                    {% if forloop.counter <= full_stars %}
+                                                        <i class="fa fa-star"></i>
+                                                    {% elif forloop.counter == full_stars|add:'1' and half_star|slice:"-1" == "5" %}
+                                                        <i class="fa fa-star-half-o"></i>
+                                                    {% else %}
+                                                        <i class="fa fa-star-o"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            {% endwith %}
+                                    <div class="product__price">&#8377; {{product.price}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        
+                              
+                        </div>
+                        <div class="col-lg-12 text-center">
+                            <div class="pagination__option">
+                                <a href="#">1</a>
+                                <a href="#">2</a>
+                                <a href="#">3</a>
+                                <a href="#"><i class="fa fa-angle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Section End -->
+{% endblock  %}

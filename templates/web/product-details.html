@@ -1,0 +1,326 @@
+{% extends "web/base.html" %}
+{% load static  %}
+{% block title %}Product Detail{% endblock  %}
+{% block content %}
+
+{% if product %}
+    <!-- Breadcrumb Begin -->
+    {% comment %} <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="./index.html"><i class="fa fa-home"></i> Home</a>
+                        <a href="#">{{category.cat_name}}</a>
+                        <span>{{product.prod_name}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> {% endcomment %}
+    <!-- Breadcrumb End -->
+
+    <!-- Product Details Section Begin -->
+    <section class="product-details spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    {% if images %}
+                    <div class="product__details__pic">
+                        <div class="product__details__pic__left product__thumb nice-scroll">
+                            {% for image in images %}
+                            
+                            <a class="pt active" href="#product-{{image.id}}">
+                                <img src="{{image.path}}" alt="">
+                            </a>
+                            {% endfor %}
+                            {% comment %} <a class="pt" href="#product-2">
+                                <img src="{% static 'web/img/product/details/thumb-1.jpg' %}" alt="">
+                            </a>
+                            <a class="pt" href="#product-3">
+                                <img src="{% static 'web/img/product/details/thumb-1.jpg' %}" alt="">
+                            </a> {% endcomment %}
+                            <a class="pt" href="#product-4">
+                                <img src="{% static 'web/img/product/details/thumb-1.jpg' %}" alt="">
+                            </a>
+                        </div>
+                        <div class="product__details__slider__content">
+                            <div class="product__details__pic__slider owl-carousel">
+                                {% for image in images %}
+                                <img data-hash="product-{{image.id}}" class="product__big__img" src="{{image.path}}" alt="">
+                                {% endfor %}
+                                <img data-hash="product-4" class="product__big__img" src="{% static 'web/img/product/details/product-1.jpg' %}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                </div>
+                <div class="col-lg-6">
+                    <div class="product__details__text">
+                        <h3>{{product.prod_name}} <span>By {{product.brand|default:"Jerry bond"}}</span></h3>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <span>( 138 reviews )</span>
+                        </div>
+                        <div class="product__details__price" id="pps">&#8377; {{product.price}} <span>&#8377; {{product.price}} </span></div>
+                        <p>{{product.describ}}</p>
+                        <div class="product__details__button">
+                            <form method="POST" action="{%url 'cart'%}">
+                                {% csrf_token %}
+                            <div class="quantity">
+                                <span>Quantity:</span>
+                                <div class="pro-qty">
+                                    <input type="text" value="1" name="quantity">
+                                </div>
+                            </div>
+                            <input type="hidden" value="{{sizes.0.id}}" name="sizeid" id="sizeid">
+                            <input type="hidden" value="{{product.id}}" name="prodid" id="prodid">
+                            <button type="submit" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</button>
+                            <ul>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                {% comment %} <li><a href="#"><span class="icon_adjust-horiz"></span></a></li> {% endcomment %}
+                            </ul>
+                        </form>
+                        </div>
+                        <div class="product__details__widget">
+                            <ul>
+                                <li>
+                                    <span>Availability:</span>
+                                    <div class="stock__checkbox">
+                                        <label for="stockin">
+                                            In Stock
+                                            <input type="checkbox"  checked disabled id="stockin">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span>Available size:</span>
+                                    {% if sizes %}
+                                    <div class="size__btn">
+                                    {% for size in sizes %}
+                                    
+                                    <label for="xs-btn" id="label-{{ size.id }}" onclick="getsize({{ size.id }})" class="cls {% if forloop.first %}active{% endif %}">
+                                        <input type="radio" id="{{ size.id }}" class=""  >
+                                        {{size.size}}
+                                    </label>
+                                    {% endfor %}
+                                    
+                                    <label for="l-btn">
+                                        <input type="radio" id="l-btn">
+                                        l
+                                    </label>
+                                </div>
+                                    {% endif %}
+                                        {% comment %} <label for="s-btn">
+                                            <input type="radio" id="s-btn">
+                                            s
+                                        </label>
+                                        <label for="m-btn">
+                                            <input type="radio" id="m-btn">
+                                            m
+                                        </label> {% endcomment %}
+                                </li>
+                                <li>
+                                    <span>Promotions:</span>
+                                    <p>Free shipping</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="product__details__tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Description</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Specification</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Reviews ( 2 )</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                                <h6>Description</h6>
+                                <p>This painting captures the serene majesty of a natural landscape, highlighting the rich textures and vivid colors of the scene. Whether it's a cascading waterfall, a quiet forest, or a sunset over a valley, the composition invites the viewer into a peaceful and immersive world:
+                                    </p>
+                                <p>Nature-Inspired Scene:
+                                    The artwork brings to life a beautiful corner of nature, capturing the stillness of trees, movement of water, or vastness of skies depending on the subject.
+                                    Artistic Detail:
+                                        The artist uses a combination of soft brushwork and bold strokes to create depth, light play, and emotion in every inch of the canvas.
+                                        Mood and Atmosphere:
+                                        With a calm and balanced palette, the painting evokes feelings of solitude, wonder, and connection to nature. 
+                                        ersatile Aesthetic:
+                                        This piece fits seamlessly into any room—be it a cozy reading nook, office space, or living area—adding warmth and a sense of calm.
+                                        Collector’s Appeal:
+                                        Ideal for nature lovers and art collectors alike, it’s a timeless addition that brings the outdoors in. </p>
+                            </div>
+                            <div class="tab-pane" id="tabs-2" role="tabpanel">
+                                <h6>Specification</h6>
+                                <p>Medium & Materials:
+                                    Hand-painted using premium quality acrylic or oil paints on professional-grade canvas.
+                                    Dimensions:
+                                    Available in multiple sizes (e.g., 18x24 in, 24x36 in, custom sizes on request).
+                                    Framing:
+                                    Optional framing available; can be shipped as rolled canvas or ready-to-hang.
+                                    Originality:
+                                    Each piece is 100% original and hand-signed by the artist. No two paintings are identical.
+                                    Care Instructions:
+                                    Avoid direct sunlight and moisture. Clean with a dry, soft cloth only.
+                                    Shipping & Packaging:
+                                    Securely packed and shipped with tracking. Estimated delivery in 5-10 business days depending on location.
+                                    Custom Orders:
+                                    Custom colors, scenes, and sizes available upon request to match your interior theme or gift preferences. </p>
+                            </div>
+                            <div class="tab-pane" id="tabs-3" role="tabpanel">
+                                <h6>Reviews ( 2 )</h6>
+                                <p>stunning attractions within the Grand Canyon of the Yellowstone, offering dramatic views and diverse hiking opportunities</p>
+                                <p>stunning attractions within the Grand Canyon of the Yellowstone, offering dramatic views and diverse hiking opportunities</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="related__title">
+                        <h5>RELATED PRODUCTS</h5>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="{% static 'web/img/product/related/rp-1.jpg' %}">
+                            <div class="label new">New</div>
+                            <ul class="product__hover">
+                                <li><a href="{% static 'web/img/product/related/rp-1.jpg' %}" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">Parkside Landscape</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">$ 59.0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="{% static 'web/img/product/related/rp-2.jpg' %}">
+                            <ul class="product__hover">
+                                <li><a href="{% static 'web/img/product/related/rp-2.jpg' %}" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">Zodiac fights</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">$ 49.0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="{% static 'web/img/product/related/rp-3.jpg' %}">
+                            <div class="label stockout">out of stock</div>
+                            <ul class="product__hover">
+                                <li><a href="{% static 'web/img/product/related/rp-3.jpg' %}" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">Artist in Artist</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">$ 59.0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="{% static 'web/img/product/related/rp-4.jpg' %}">
+                            <ul class="product__hover">
+                                <li><a href="{% static 'web/img/product/related/rp-4.jpg' %}" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">Houdering Landscape</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">$ 59.0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        function getsize(sizeId) {
+            let buttons = document.getElementsByClassName("cls");
+            for (let i = 0; i < buttons.length; i++) {
+                let label = document.getElementById("label-" + buttons[i].id);
+                if (label) {
+                    label.classList.remove("active");
+                }
+            }
+
+            // Step 2: Add 'active1' class to the label of the clicked button
+            let selectedLabel = document.getElementById("label-" + sizeId);
+            if (selectedLabel) {
+                selectedLabel.classList.add("active");
+            }
+            // Optional: Set hidden input or do Ajax fetch, etc.
+            document.getElementById("sizeid").value = sizeId;
+        
+            fetch(`/get-size-details/${sizeId}/`)  // your Django endpoint
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();  // assuming the view returns JSON
+                })
+                .then(data => {
+                    document.getElementById("pps").innerHTML = "₹" + data.price + ' <span>₹' + data.price + '</span>';
+                   
+                })
+                .catch(error => {
+                    console.error('Error fetching size data:', error);
+                });
+        }
+    </script>
+    {% endif %}
+    <!-- Product Details Section End -->
+    {% endblock  %}

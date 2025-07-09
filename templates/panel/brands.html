@@ -1,0 +1,150 @@
+{% extends "panel/basetemp.html" %}
+{% load static  %}
+{% block title %}Home Page{% endblock  %}
+{% block content %}
+<div class="container">
+    <div class="page-inner">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+        >
+      <div class="col-md-12 text-center">
+        <h3 class="fw-bold mb-3">Brands</h3>
+        <h6 class="op-7 mb-2">Create Brand </h6>
+      </div>
+     
+    </div>
+    <div class="row bg-white">
+        {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+        {% comment %} <div class="title text-center h3 my-3">Brand Creation</div> {% endcomment %}
+        <form method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-light">
+            {% csrf_token %}
+            <div class="row g-3">
+                <!-- Category Name -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Brand Name</label>
+                    <input type="text" class="form-control" name="brand_name" placeholder="Enter Brand Name" required>
+                </div>
+                <!-- Category Description -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold"> Description</label>
+                    <input type="text" class="form-control" name="brand_desc" placeholder="Enter Description" required>
+                </div>
+                <!-- Parent Category -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Brand Since</label>
+                    <input type="text" class="form-control" name="since" placeholder="Since" required>
+                </div>
+                <!-- Sub Category -->
+                {% comment %} <div class="col-md-6">
+                    <label class="form-label fw-semibold">Sub Category</label>
+                    <select class="form-select" name="subCategory" id="subCategory" required>
+                        <option value="0">None</option>
+                    </select>
+                </div> {% endcomment %}
+                <!-- Category Image -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Logo</label>
+                    <input type="file" class="form-control" name="myfile">
+                </div>
+                <!-- Availability -->
+                <div class="col-md-6 d-flex align-items-center">
+                    <label class="form-label me-3 fw-semibold">Availability:</label>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="catAvailability" value="1" required checked>
+                        <label class="form-check-label">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="catAvailability" value="0" required>
+                        <label class="form-check-label">No</label>
+                    </div>
+                </div>
+                <!-- Submit Button -->
+                <div class="col-12 text-center mt-3">
+                    <button type="submit" class="btn btn-primary px-4">Create</button>
+                </div>
+            </div>
+        </form>        
+
+        <!-- Category Table -->
+        <div class="table-container mt-5">
+            <h4 class="text-center">Brand List</h4>
+            <table class="table table-bordered table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Brand Name</th>
+                        <th>Description</th>
+                        <th>Brand Since</th>
+                        <th>Status</th>
+                        <th>Image</th>
+                        <th>Action</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    {% for row in brands %}
+                    <tr>
+                        <td>{{ forloop.counter  }}</td>
+                        <td>{{ row.name }}</td>
+                        <td>{{ row.describ }}</td>
+                        <td>{{ row.since|default:"2025" }}</td>
+                        <td>{{ row.status|yesno:"Active,Inactive" }}</td>
+                        <td><img src="{{ row.image }} " class="img-fluid" width="80px"></td>
+                        <td><a href="{% url 'brand_edit' row.id %}" class="btn btn-warning btn-sm">Edit</a>|<a href="{% url 'brand_delete' row.id %}" class="btn btn-danger btn-sm">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+
+        {% if msgs %}
+        $.notify({
+            icon: 'icon-bell',
+            title: 'Dear Admin',
+            message: '{{msgs}}',
+          },{
+            type: 'secondary',
+            placement: {
+              from: "bottom",
+              align: "right"
+            },
+            time: 1000,
+          });
+        
+        {% endif %}
+
+        {% if messages %}
+    {% for message in messages %}
+        <script>
+            $.notify({
+                icon: 'icon-bell',
+                title: 'User',
+                message: '{{ message }}',
+            },{
+                type: 'secondary',
+                placement: {
+                    from: "bottom",
+                    align: "right"
+                },
+                time: 1000,
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends "panel/basetemp.html" %}
+{% load static  %}
+{% block title %}Products{% endblock  %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<div class="container">
+    <div class="page-inner">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+        >
+      <div class="text-center my-2 col-sm-12">
+        <h3 class="fw-bold mb-3">{{product}}</h3>
+        <h6 class="op-7 mb-2">Add Product Images </h6>
+      </div>
+     
+    </div>
+    <div class="row bg-white">
+        {% comment %} <div class="title text-center h3 my-3">Product Creation</div> {% endcomment %}
+        <form method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-light">
+            {% csrf_token %}
+            <div class="row g-3">
+                <!-- Product Name -->
+                
+                <!-- Image -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Image</label>
+                    <input type="file" class="form-control" name="myfile">
+                   
+                </div>
+                <!-- Availability -->
+                <div class="col-md-6 d-flex align-items-center mt-5">
+                    <label class="form-label me-3 fw-semibold">Availability:</label>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" {% if image.status == 1 %}checked{% endif %} name="catAvailability" value="1" required checked>
+                        <label class="form-check-label">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" {% if image.status == 0 %}checked{% endif %} name="catAvailability" value="0" required>
+                        <label class="form-check-label">No</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <input type="hidden" name="hidimage" value="{{image.path}}">
+                    <img src="{{image.path}}" width="100px" height="100px">
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12 text-center mt-3">
+                    <button type="submit" class="btn btn-primary px-4">Update</button>
+                </div>
+            </div>
+        </form>        
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    function callparent(){
+        $.ajax({
+            url: "{% url 'parentcat' %}",
+            dataType: "JSON",
+            type: "GET",
+            success: function(response) {
+                var create = "<option value=''>Select Parent</option><option value='0'>Parent</option>";
+                $.each(response, function(index, parent) {
+                    create += "<option value='" + parent.id + "'>" + parent.cat_name + "</option>";
+                });
+                $("#catParent").html(create);
+            }
+        });
+    }
+    callparent();
+
+    function callbrands(){
+        $.ajax({
+            url: "{% url 'get-brands' %}",
+            dataType: "JSON",
+            type: "GET",
+            success: function(response) {
+                var create = "<option value=''>Select Brand</option>";
+                $.each(response, function(index, parent) {
+                    create += "<option value='" + parent.id + "'>" + parent.name + "</option>";
+                });
+                $("#brand").html(create);
+            }
+        });
+    }
+    callbrands();
+
+    function getsubs(value){
+        $.ajax({
+            url: "{% url 'sub_cat' %}",
+            data: { val: value }, 
+            dataType: "JSON",
+            type: "GET",
+            success: function(response) {
+                var create = "<option value=''>Select Sub Category</option><option value='0'>None</option>";
+                $.each(response, function(index, sub) {
+                    create += "<option value='" + sub.id + "'>" + sub.cat_name + "</option>";
+                });
+                $("#subCategory").html(create);
+            }
+        });
+    }
+
+    function getsubsub(value){
+        var parent=$("#catParent").val()
+        $.ajax({
+            url: "{% url 'sub_sub_cat' %}",
+            data: { val:parent, get:value }, 
+            dataType: "JSON",
+            type: "GET",
+            success: function(response) {
+                var create = "<option value=''>Select Sub Category</option><option value='0'>None</option>";
+                $.each(response, function(index, sub) {
+                    create += "<option value='" + sub.id + "'>" + sub.cat_name + "</option>";
+                });
+                $("#subsubCategory").html(create);
+            }
+        });
+    }
+    $(document).ready(function(){
+
+        {% if msgs %}
+        $.notify({
+            icon: 'icon-bell',
+            title: 'Dear Admin',
+            message: '{{msgs}}',
+          },{
+            type: 'secondary',
+            placement: {
+              from: "bottom",
+              align: "right"
+            },
+            time: 1000,
+          });
+        
+        {% endif %}
+
+        {% if messages %}
+    {% for message in messages %}
+        <script>
+            $.notify({
+                icon: 'icon-bell',
+                title: 'Dear Admin',
+                message: '{{ message }}',
+            },{
+                type: 'secondary',
+                placement: {
+                    from: "bottom",
+                    align: "right"
+                },
+                time: 1000,
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+    });
+</script>
+{% endblock %}

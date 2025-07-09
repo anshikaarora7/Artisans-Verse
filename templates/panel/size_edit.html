@@ -1,0 +1,109 @@
+{% extends "panel/basetemp.html" %}
+{% load static  %}
+{% block title %}Products{% endblock  %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<div class="container">
+    <div class="page-inner">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+        >
+      <div class="text-center my-2 col-sm-12">
+        <h3 class="fw-bold mb-3">{{product}} </h3>
+        <h6 class="op-7 mb-2">Size Update</h6>
+      </div>
+     
+    </div>
+    <div class="row bg-white">
+        {% comment %} <div class="title text-center h3 my-3">Product Creation</div> {% endcomment %}
+        <form method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-light">
+            {% csrf_token %}
+            <div class="row g-3">
+                <!-- Product Name -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Product Name</label>
+                    <input type="text" readonly class="form-control" value="{{product}}" name="prod_name" placeholder="Enter Product Name" required>
+                </div>
+                <input type="hidden" class="form-control" value="{{prod_id}}" name="prodid">
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Size</label>
+                    <input type="text" class="form-control" value="{{size.size}}" name="size" placeholder="Enter Size " required>
+                </div>
+
+                <!-- Price -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Price</label>
+                    <input type="number" class="form-control" value="{{size.price}}"  name="price" placeholder="Enter Price" required>
+                </div>
+                <!-- Stock -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Quantity</label>
+                    <input type="number" class="form-control" name="stock" value="{{size.quantity}}"  placeholder="Enter Quantity" required>
+                </div>
+                
+
+                <!-- Availability -->
+                <div class="col-md-6 d-flex align-items-center">
+                    <label class="form-label me-3 fw-semibold">Availability:</label>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" {% if products.status == 1 %}checked{% endif %} name="catAvailability" value="1" required checked>
+                        <label class="form-check-label">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" {% if products.status == 0 %}checked{% endif %} name="catAvailability" value="0" required>
+                        <label class="form-check-label">No</label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12 text-center mt-3">
+                    <button type="submit" class="btn btn-primary px-4">Update</button>
+                </div>
+            </div>
+        </form>        
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+
+        {% if msgs %}
+        $.notify({
+            icon: 'icon-bell',
+            title: 'Dear Admin',
+            message: '{{msgs}}',
+          },{
+            type: 'secondary',
+            placement: {
+              from: "bottom",
+              align: "right"
+            },
+            time: 1000,
+          });
+        
+        {% endif %}
+
+        {% if messages %}
+    {% for message in messages %}
+        <script>
+            $.notify({
+                icon: 'icon-bell',
+                title: 'Dear Admin',
+                message: '{{ message }}',
+            },{
+                type: 'secondary',
+                placement: {
+                    from: "bottom",
+                    align: "right"
+                },
+                time: 1000,
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+    });
+</script>
+{% endblock %}

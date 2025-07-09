@@ -1,0 +1,451 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Painting Template">
+    <meta name="keywords" content="Newest, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> {% block title %}{% endblock  %} </title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="{% static 'web/css/bootstrap.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'web/css/font-awesome.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'web/css/elegant-icons.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'web/css/jquery-ui.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'web/css/magnific-popup.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'web/css/owl.carousel.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'web/css/slicknav.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'web/css/style.css' %}" type="text/css">
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <style>
+        .nav-item:last-child {
+            margin-right:30px
+        }
+        .nav-item{
+            margin-right:30px
+        }
+        .navbar {
+          background-color: #fff !important;
+        }
+        
+        /* Center navbar content */
+        .navbar-nav {
+          margin: 0 auto;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+        }
+        
+        /* Navigation links style */
+        .navbar-nav > li > a.nav-link {
+          font-size: 16px; /* Increased font size */
+          color: #333 !important;
+          padding: 12px 20px;
+          text-decoration: none;
+          font-weight: 500; /* Slight boldness */
+          transition: color 0.3s ease;
+        }
+        
+        /* Hover effect */
+        .navbar-nav > li > a.nav-link:hover {
+          color: #000 !important;
+          text-decoration: underline;
+        }
+        
+        /* Remove default dropdown arrow from Bootstrap */
+        .navbar-nav .dropdown-toggle::after {
+          display: none !important;
+        }
+        
+        /* Dropdown menu styles */
+        .dropdown-menu {
+          background-color: #fff;
+          border: none;
+          border-radius: 0;
+          padding: 15px 20px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+          display: none;
+        }
+        
+        /* Show dropdown on hover */
+        .nav-item.dropdown:hover .dropdown-menu {
+          display: block;
+        }
+
+        .list-unstyled {
+            font-weight:500
+            padding-left: 0;
+            padding: 0.5rem 1.5rem;
+            list-style: none;
+        }
+        dropdown-header {
+            font-weight:800
+            font-size:0.925rem
+        }
+
+        
+        /* Dropdown items */
+        .dropdown-menu .dropdown-item {
+          font-size: 14px;
+          color: #333;
+          padding: 5px 10px;
+        }
+        
+        .dropdown-menu .dropdown-item:hover {
+          color:rgb(21, 21, 22);
+          text-decoration: underline;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+          .navbar-nav {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          
+          .dropdown-menu {
+            position: static !important;
+            display: block !important;
+            box-shadow: none;
+          }
+        }
+        </style>
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__close">+</div>
+        <ul class="offcanvas__widget">
+            <li><span class="icon_search search-switch"></span></li>
+            <li><a href="#"><span class="icon_heart_alt"></span>
+                <div class="tip">2</div>
+            </a></li>
+            <li><a href="#"><span class="icon_bag_alt"></span>
+                <div class="tip">2</div>
+            </a></li>
+        </ul>
+        <div class="offcanvas__logo">
+            <a href="./index.html"><img src="{% static 'web/img/logo.png' %}" alt=""></a>
+            LOCal
+        </div>
+        <div id="mobile-menu-wrap"></div>
+        <div class="offcanvas__auth">
+            <a href="#">Login</a>
+            <a href="#">Register</a>
+        </div>
+    </div>
+    <!-- Offcanvas Menu End -->
+
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-2 col-lg-1">
+                    <div class="">
+                        <a href="{%url 'index'%}">
+                            <img src="{% static 'web/img/logo.png' %}" width="100px" alt="">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xl-8 col-lg-9 d-flex justify-content-center align-items-center">
+                    <nav class="navbar navbar-expand-md bg-white p-0">
+                      <div class="container">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-nav-1">
+                          <span class="navbar-toggler-icon"></span>
+                        </button>
+                  
+                        <div class="collapse navbar-collapse justify-content-center" id="main-nav-1">
+                          <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                              <a class="nav-link text-dark small" href="{% url 'index'%}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link text-dark small" href="{% url 'about'%}">About</a>
+                            </li>
+                          </ul>
+                          <ul class="navbar-nav" id="dynamic-parent-menu">
+                            <!-- Dynamic Parent Menus will be inserted here -->
+                          </ul>
+                  
+                          <ul class="navbar-nav ml-auto">
+                            {% comment %} <li class="nav-item">
+                              <a class="nav-link text-dark small" href="/blog">Blog</a>
+                            </li> {% endcomment %}
+                            <li class="nav-item">
+                              <a class="nav-link text-dark small" href="/contact">Contact</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark small" href="#" data-toggle="dropdown">
+                                  {% if username %}
+                                    {{ username|default:"User" }}
+                                  {% else %}
+                                    My Account
+                                  {% endif %}
+                                </a>
+                              
+                                <ul class="dropdown-menu">
+                                  {% if username %}
+                                    <li><a class="dropdown-item" href="{%url 'user_orders'%}">My Orders</a></li>
+                                    <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
+                                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                                  {% else %}
+                                    <li><a class="dropdown-item" href="{%url 'login'%}">Login</a></li>
+                                    <li><a class="dropdown-item" href="{%url 'register'%}">Register</a></li>
+                                  {% endif %}
+                                </ul>
+                              </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </nav>
+                  </div>
+                <div class="col-lg-2">
+                    <div class="header__right">
+                        <ul class="header__right__widget">
+                            <li><span class="icon_search search-switch"></span></li>
+                            {% comment %} <li><a href="#"><span class="icon_heart_alt"></span>
+                                <div class="tip">2</div>
+                            </a></li> {% endcomment %}
+                            <li><a href="{%url 'cart'%}"><span class="icon_bag_alt"></span>
+                                {% comment %} <div class="tip">2</div> {% endcomment %}
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+{% block content %}
+
+{% endblock  %}
+
+
+
+        <!-- Instagram Begin -->
+        <div class="instagram">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                        <div class="instagram__item set-bg" data-setbg="{% static 'web/img/instagram/insta-1.jpg' %}">
+                            <div class="instagram__text">
+                                <i class="fa fa-instagram"></i>
+                                <a href="#">Artists</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                        <div class="instagram__item set-bg" data-setbg="{% static 'web/img/instagram/insta-2.jpg' %}">
+                            <div class="instagram__text">
+                                <i class="fa fa-instagram"></i>
+                                <a href="#">Artists</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                        <div class="instagram__item set-bg" data-setbg="{% static 'web/img/instagram/insta-3.jpg' %}">
+                            <div class="instagram__text">
+                                <i class="fa fa-instagram"></i>
+                                <a href="#">Artists</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                        <div class="instagram__item set-bg" data-setbg="{% static 'web/img/instagram/insta-4.jpg' %}">
+                            <div class="instagram__text">
+                                <i class="fa fa-instagram"></i>
+                                <a href="#">Artists</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                        <div class="instagram__item set-bg" data-setbg="{% static 'web/img/instagram/insta-5.jpg' %}">
+                            <div class="instagram__text">
+                                <i class="fa fa-instagram"></i>
+                                <a href="#">Artists</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                        <div class="instagram__item set-bg" data-setbg="{% static 'web/img/instagram/insta-6.jpg' %}">
+                            <div class="instagram__text">
+                                <i class="fa fa-instagram"></i>
+                                <a href="#">Artists</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Instagram End -->
+    
+<!-- Footer Section Begin -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-7">
+                <div class="footer__about">
+                    <div class="footer__logo">
+                        <a href="./index.html"><img src="{% static 'web/img/logo.png' %}" alt=""></a>
+                    </div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                    cilisis.</p>
+                    <div class="footer__payment">
+                        <a href="#"><img src="{% static 'web/img/payment/payment-1.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'web/img/payment/payment-2.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'web/img/payment/payment-3.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'web/img/payment/payment-4.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'web/img/payment/payment-5.png' %}" alt=""></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-5">
+                <div class="footer__widget">
+                    <h6>Quick links</h6>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blogs</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <div class="footer__widget">
+                    <h6>Account</h6>
+                    <ul>
+                      <li><a href="{%url 'user_orders'%}">Orders Tracking</a></li>
+                      <li><a href="{%url 'checkout'%}">Checkout</a></li>
+                      {% comment %} <li><a href="#">Wishlist</a></li> {% endcomment %}
+                      <li><a href="{%url 'signin'%}">Admin Login</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-8 col-sm-8">
+                <div class="footer__newslatter">
+                    <h6>NEWSLETTER</h6>
+                    <form action="#">
+                        <input type="text" placeholder="Email">
+                        <button type="submit" class="site-btn">Subscribe</button>
+                    </form>
+                    <div class="footer__social">
+                        <a href="#"><i class="fa fa-facebook"></i></a>
+                        <a href="#"><i class="fa fa-twitter"></i></a>
+                        <a href="#"><i class="fa fa-youtube-play"></i></a>
+                        <a href="#"><i class="fa fa-instagram"></i></a>
+                        <a href="#"><i class="fa fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                <div class="footer__copyright__text">
+                    <p>Copyright &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a></p>
+                </div>
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Section End -->
+
+<!-- Search Begin -->
+<div class="search-model">
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="search-close-switch">+</div>
+        <form class="search-model-form">
+            <input type="text" id="search-input" placeholder="Search here.....">
+        </form>
+    </div>
+</div>
+<!-- Search End -->
+
+<!-- Js Plugins -->
+<script src="{% static 'web/js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'web/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'web/js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'web/js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'web/js/mixitup.min.js' %}"></script>
+<script src="{% static 'web/js/jquery.countdown.min.js' %}"></script>
+<script src="{% static 'web/js/jquery.slicknav.js' %}"></script>
+<script src="{% static 'web/js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'web/js/jquery.nicescroll.min.js' %}"></script>
+<script src="{% static 'web/js/main.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+          url: "/shownav",
+          type: "GET",
+          dataType: "json",
+          success: function (response) {
+            const parentMenu = $('#dynamic-parent-menu');
+            parentMenu.empty();
+      
+            response.menu_items.forEach(function (item) {
+              const parent = item.parent;
+              const subcategories = item.subcategories;
+              const megaMenuId = 'mega-menu-' + parent.id;
+      
+              const parentHTML = `
+                <li class="nav-item dropdown position-static">
+                  <a href="/shop/${item.parent.id}/0/0" class="nav-link dropdown-toggle">${parent.name}</a>
+                  <div class="dropdown-menu w-100 top-auto" id="${megaMenuId}">
+                    <div class="container">
+                      <div class="row w-100">
+                      </div>
+                    </div>
+                  </div>
+                </li>`;
+      
+              parentMenu.append(parentHTML);
+      
+              const columnsContainer = $(`#${megaMenuId} .row`);
+      
+              subcategories.forEach(function (subcatItem) {
+                const sub = subcatItem.subcategory;
+                const subSubs = subcatItem.sub_subcategories;
+      
+                let columnHTML = `
+                  <div class="col-md-3">
+                    <h6 class="dropdown-header text-decoration-none"><a href="/shop/${item.parent.id}/${sub.id}/0">${sub.name}</a></h6>
+                    <ul class="list-unstyled">`;
+      
+                subSubs.forEach(function (subSub) {
+                  columnHTML += `<li><a class="dropdown-item" href="/shop/${item.parent.id}/${sub.id}/${subSub.id}">${subSub.name}</a></li>`;
+                });
+      
+                columnHTML += `</ul></div>`;
+                columnsContainer.append(columnHTML);
+              });
+            });
+          },
+          error: function () {
+            console.error("Failed to load menu.");
+          }
+        });
+      });
+    </script>
+</body>
+
+</html>

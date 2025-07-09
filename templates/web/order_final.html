@@ -1,0 +1,187 @@
+{% extends "web/base.html" %}
+{% load static  %}
+{% block title %}Cart{% endblock  %}
+{% block content %}
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="./index.html"><i class="fa fa-home"></i> Home</a>
+                        <span>Order Final</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+    <style>
+        a:hover {
+            color: #0d0d0d;
+            text-decoration: underline;
+        }
+    </style>
+    <!-- Shop Cart Section Begin -->
+    <section class="shop-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    {% if messages %}
+                    {% for message in messages %}
+                        <tr><div class="text-center alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div> </tr>
+                    {% endfor %}
+                {% endif %}
+                    <div class="shop__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if items %}
+                                {% for cart in items %}
+
+                                <tr>
+                                    <td class="cart__product__item">
+                                        <img src="{{cart.8}}" alt="">
+                                        <div class="cart__product__item__title d-flex align-items-center">
+                                            <h6>{{cart.3}}</h6>
+                                        </div>
+                                    </td>
+                                    <td class="cart__price">&#8377; {{cart.4}}</td>
+                                    <td class="cart__quantity">
+                                        <div class="pro-qty">
+                                            <input type="text" value="{{cart.1}}">
+                                        </div>
+                                    </td>
+                                    <td class="cart__total">&#8377; {{ cart.9 }}</td>
+                                    <td class="cart__close"><a href="{%url 'delete_cart' cart.0%}"><span class="icon_close"></span></a></td>
+                                </tr>
+                                
+                                {% endfor %}
+                                {% endif %}
+                                {% comment %} <tr>
+                                    <td class="cart__product__item">
+                                        <img src="{% static 'web/img/shop-cart/cp-2.jpg' %}" alt="">
+                                        <div class="cart__product__item__title">
+                                            <h6>Japanese Spring</h6>
+                                            <div class="rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="cart__price">$ 170.0</td>
+                                    <td class="cart__quantity">
+                                        <div class="pro-qty">
+                                            <input type="text" value="1">
+                                        </div>
+                                    </td>
+                                    <td class="cart__total">$ 170.0</td>
+                                    <td class="cart__close"><span class="icon_close"></span></td>
+                                </tr> {% endcomment %}
+                                {% comment %} <tr>
+                                    <td class="cart__product__item">
+                                        <img src="{% static 'web/img/shop-cart/cp-3.jpg' %}" alt="">
+                                        <div class="cart__product__item__title">
+                                            <h6>Mountains</h6>
+                                            <div class="rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="cart__price">$ 85.0</td>
+                                    <td class="cart__quantity">
+                                        <div class="pro-qty">
+                                            <input type="text" value="1">
+                                        </div>
+                                    </td>
+                                    <td class="cart__total">$ 170.0</td>
+                                    <td class="cart__close"><span class="icon_close"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cart__product__item">
+                                        <img src="{% static 'web/img/shop-cart/cp-4.jpg' %}" alt="">
+                                        <div class="cart__product__item__title">
+                                            <h6>Mountains</h6>
+                                            <div class="rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="cart__price">$ 55.0</td>
+                                    <td class="cart__quantity">
+                                        <div class="pro-qty">
+                                            <input type="text" value="1">
+                                        </div>
+                                    </td>
+                                    <td class="cart__total">$ 110.0</td>
+                                    <td class="cart__close"><span class="icon_close"></span></td>
+                                </tr> {% endcomment %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="cart__btn">
+                        <a href="{%url 'index'%}">Cancel Booking</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="cart__btn update__btn">
+                        <button id="pay-btn" class="primary-btn">Confirm Booking</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        key: "{{ razorpay_key }}",
+        amount: "{{ amount }}",
+        currency: "{{ currency }}",
+        name: "Your Store",
+        order_id: "{{ order_id }}",
+        callback_url: "{{ callback_url }}",
+        "handler": function (response){
+        // Submit to paymenthandler
+        document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+        document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+        document.getElementById('razorpay_signature').value = response.razorpay_signature;
+
+        document.getElementById('payment-form').submit();
+    }
+        };
+
+      var rzp = new Razorpay(options);
+      document.getElementById("pay-btn").onclick = function (e) {
+        rzp.open();
+        e.preventDefault();
+      };
+</script>
+    <!-- Shop Cart Section End -->
+    {% endblock  %}
