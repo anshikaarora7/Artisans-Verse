@@ -1,0 +1,140 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block title %}Artisans-Verse | Curated Handcrafted Goods{% endblock %}
+{% block content %}
+<!-- Hero Showcase -->
+<section class="av-hero">
+  <div class="av-container av-hero-grid">
+    <div data-reveal>
+      <span class="av-eyebrow"><i class="fas fa-sparkles"></i> Small-Batch Craft Marketplace</span>
+      <h1 class="av-hero-title">Objects shaped by hand, made to live with.</h1>
+      <p class="av-hero-lead">
+        Discover wheel-thrown pottery, handloom textiles, and carved woodwork sourced directly from independent local artisans and craft collectives.
+      </p>
+      <div style="display:flex; flex-wrap:wrap; gap:12px;">
+        <a href="{% url 'shop' %}" class="av-btn av-btn-primary">
+          Explore Collection <i class="fas fa-arrow-right"></i>
+        </a>
+        {% if request.user.is_authenticated %}
+          <a href="{% url 'dashboard' %}" class="av-btn av-btn-outline">Open Dashboard</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="av-btn av-btn-outline">Artisan Sign In</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="av-hero-visual" data-reveal style="--stagger: 2;">
+      <div class="av-hero-card">
+        <img src="{% static 'web/img/categories/category-1.jpg' %}" alt="Handcrafted Pottery">
+      </div>
+      <div class="av-hero-card is-offset">
+        <img src="{% static 'web/img/categories/category-2.jpg' %}" alt="Handloom Textiles">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Curated Categories -->
+<section class="av-section" style="background: var(--av-surface-alt);">
+  <div class="av-container">
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:16px; margin-bottom:32px;" data-reveal>
+      <div>
+        <span class="av-eyebrow">Disciplines</span>
+        <h2 style="font-size: clamp(1.7rem, 3vw, 2.3rem); margin-top:6px;">Browse by Craft</h2>
+      </div>
+      <a href="{% url 'shop' %}" class="av-btn av-btn-outline av-btn-sm">View All Goods</a>
+    </div>
+
+    <div class="av-grid av-grid-3">
+      {% for cat in categorys|slice:":6" %}
+        <a href="{% url 'shop_parent' cat.id %}" class="av-card av-card-hover" data-reveal style="--stagger: {{ forloop.counter0 }};">
+          <div class="av-product-media" style="aspect-ratio: 16 / 10;">
+            <img src="{{ cat.image }}" alt="{{ cat.cat_name }}" onerror="this.src='{% static 'web/img/categories/category-1.jpg' %}'">
+            <span class="av-product-badge">Collection</span>
+          </div>
+          <div class="av-product-body">
+            <h3 class="av-product-title">{{ cat.cat_name }}</h3>
+            <p style="margin:0; font-size:13px; color:var(--av-ink-muted);">{{ cat.describ|truncatewords:14 }}</p>
+          </div>
+        </a>
+      {% empty %}
+        <div class="av-card" style="padding:24px; grid-column: 1 / -1; text-align:center;">
+          <p style="margin:0; color:var(--av-ink-muted);">Curated craft categories will appear here once added from the <a href="{% url 'dashboard' %}" style="color:var(--av-primary); font-weight:600;">Dashboard</a>.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Featured Handcrafted Pieces -->
+<section class="av-section">
+  <div class="av-container">
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:16px; margin-bottom:32px;" data-reveal>
+      <div>
+        <span class="av-eyebrow">Featured Studio Pieces</span>
+        <h2 style="font-size: clamp(1.7rem, 3vw, 2.3rem); margin-top:6px;">Fresh from the Workshop</h2>
+      </div>
+      <a href="{% url 'shop' %}" class="av-btn av-btn-ghost av-btn-sm">Browse Catalog <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="av-grid av-grid-4">
+      {% for product in products|slice:":8" %}
+        <div class="av-card av-card-hover" data-reveal style="--stagger: {{ forloop.counter0 }}; display:flex; flex-direction:column;">
+          <a href="{% url 'shop_detail' product.id %}" class="av-product-media">
+            <img src="{{ product.image }}" alt="{{ product.prod_name }}" onerror="this.src='{% static 'web/img/product/product-1.jpg' %}'">
+            <span class="av-product-badge">Handcrafted</span>
+          </a>
+          <div class="av-product-body" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+            <div>
+              <a href="{% url 'shop_detail' product.id %}"><h3 class="av-product-title">{{ product.prod_name }}</h3></a>
+              <div class="av-product-meta">
+                <span class="av-price">&#8377;{{ product.price|default:0 }}</span>
+                <span style="color: var(--av-gold); font-size:13px;"><i class="fas fa-star"></i> {{ product.stars }}</span>
+              </div>
+            </div>
+            <form method="POST" action="{% url 'cart' %}" data-ajax-cart>
+              {% csrf_token %}
+              <input type="hidden" name="prodid" value="{{ product.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="av-btn av-btn-outline av-btn-sm av-btn-block">
+                <i class="fas fa-shopping-bag"></i> Add to Cart
+              </button>
+            </form>
+          </div>
+        </div>
+      {% empty %}
+        <div class="av-card" style="padding:36px; grid-column: 1 / -1; text-align:center;">
+          <h3 style="margin-bottom:8px;">No products in the showcase yet</h3>
+          <p style="color:var(--av-ink-muted); margin-bottom:16px;">Add handcrafted pieces from your Artisan Dashboard to feature them here.</p>
+          <a href="{% url 'dashboard' %}" class="av-btn av-btn-primary av-btn-sm">Go to Dashboard</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Artisan Value Strip -->
+<section class="av-section" style="padding-top: 0;">
+  <div class="av-container">
+    <div class="av-card" style="background: var(--av-forest); color: #fff; padding: clamp(28px, 4vw, 48px); border: none;" data-reveal>
+      <div class="av-grid av-grid-3" style="gap: 28px;">
+        <div>
+          <i class="fas fa-hands" style="font-size:24px; color:var(--av-gold); margin-bottom:12px;"></i>
+          <h3 style="color:#fff; font-size:19px; margin-bottom:8px;">100% Handmade</h3>
+          <p style="margin:0; font-size:14px; color:rgba(255,255,255,0.78);">Every item is crafted in small batches by independent regional artisans.</p>
+        </div>
+        <div>
+          <i class="fas fa-leaf" style="font-size:24px; color:var(--av-gold); margin-bottom:12px;"></i>
+          <h3 style="color:#fff; font-size:19px; margin-bottom:8px;">Natural Materials</h3>
+          <p style="margin:0; font-size:14px; color:rgba(255,255,255,0.78);">Locally sourced clay, organic cottons, natural dyes, and reclaimed timber.</p>
+        </div>
+        <div>
+          <i class="fas fa-shipping-fast" style="font-size:24px; color:var(--av-gold); margin-bottom:12px;"></i>
+          <h3 style="color:#fff; font-size:19px; margin-bottom:8px;">Direct to Collector</h3>
+          <p style="margin:0; font-size:14px; color:rgba(255,255,255,0.78);">Fair compensation directly supporting local craft communities.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

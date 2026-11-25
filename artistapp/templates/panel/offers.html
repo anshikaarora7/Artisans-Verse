@@ -1,0 +1,161 @@
+{% extends "panel/basetemp.html" %}
+{% load static  %}
+{% block title %}Offers{% endblock  %}
+{% block content %}
+<div class="container">
+    <div class="page-inner">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+        >
+      <div class="col-md-12 text-center">
+        <h3 class="fw-bold mb-3">Offers</h3>
+        <h3 class="op-7 mb-2 h3">Create Offers </h3>
+      </div>
+     
+    </div>
+    <div class="row bg-white">
+        {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+        <form method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-light">
+            {% csrf_token %}
+            <div class="row g-3">
+                <!-- Category Name -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Offer Title</label>
+                    <input type="text" class="form-control" name="offer_title" placeholder="Enter Title" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Offer Code</label>
+                    <input type="text" class="form-control" name="offer_code" placeholder="Enter Title" required>
+                </div>
+                <!-- Category Description -->
+                <div class="col-md-12">
+                    <label class="form-label fw-semibold">Offer Description</label>
+                    <textarea class="form-control" rows="4" class="form-control" name="offer_describ" placeholder="Enter Description" required></textarea>
+                </div>
+                <!-- Parent Category -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Start date</label>
+                    <input type="date" class="form-control" name="sdate" placeholder="Start Date" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">End Date</label>
+                    <input type="date" class="form-control" name="edate" placeholder="End Date" required>
+                </div>
+                <!-- Sub Category -->
+                {% comment %} <div class="col-md-6">
+                    <label class="form-label fw-semibold">Sub Category</label>
+                    <select class="form-select" name="subCategory" id="subCategory" required>
+                        <option value="0">None</option>
+                    </select>
+                </div> {% endcomment %}
+                <!-- Category Image -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Offer Image</label>
+                    <input type="file" class="form-control" name="myfile">
+                </div>
+                <!-- Availability -->
+                <div class="col-md-6 d-flex align-items-center mt-5">
+                    <label class="form-label me-3 fw-semibold">Availability:</label>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="catAvailability" value="1" required checked>
+                        <label class="form-check-label">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="catAvailability" value="0" required>
+                        <label class="form-check-label">No</label>
+                    </div>
+                </div>
+                <!-- Submit Button -->
+                <div class="col-12 text-center mt-3">
+                    <button type="submit" class="btn btn-primary px-4">Create</button>
+                </div>
+            </div>
+        </form>        
+
+        <!-- Category Table -->
+        <div class="table-container mt-5">
+            <h4 class="text-center">Offers List</h4>
+            <table class="table table-bordered table-striped table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Image</th>
+                        <th>Action</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    {% for row in offers %}
+                    <tr>
+                        <td>{{ forloop.counter  }}</td>
+                        <td>{{ row.title }}</td>
+                        <td>{{ row.offer_code }}</td>
+                        <td>{{ row.describ|default:"2025" }}</td>
+                        <td>{{ row.start_date|default:"2025" }}</td>
+                        <td>{{ row.end_date|default:"2025" }}</td>
+                        <td>{{ row.status|yesno:"Active,Inactive" }}</td>
+                        <td><img src="{{ row.image }} " class="img-fluid" width="80px"></td>
+                        <td><a href="{% url 'offer_edit' row.id %}" class="btn btn-primary btn-sm">Edit</a>|<a href="{% url 'offer_delete' row.id %}" class="btn btn-danger btn-sm">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+
+        {% if msgs %}
+        $.notify({
+            icon: 'icon-bell',
+            title: 'Dear Admin',
+            message: '{{msgs}}',
+          },{
+            type: 'secondary',
+            placement: {
+              from: "bottom",
+              align: "right"
+            },
+            time: 1000,
+          });
+        
+        {% endif %}
+
+        {% if messages %}
+    {% for message in messages %}
+        <script>
+            $.notify({
+                icon: 'icon-bell',
+                title: 'User',
+                message: '{{ message }}',
+            },{
+                type: 'secondary',
+                placement: {
+                    from: "bottom",
+                    align: "right"
+                },
+                time: 1000,
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+    });
+</script>
+{% endblock %}

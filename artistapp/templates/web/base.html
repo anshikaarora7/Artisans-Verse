@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Artisans-Verse | Handcrafted Goods from Local Artisans{% endblock %}</title>
+  <link rel="icon" type="image/png" href="{% static 'web/img/logo.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'artisans/css/artisans.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <!-- Sticky Editorial Header -->
+  <header class="av-header">
+    <div class="av-container av-nav-inner">
+      <a href="{% url 'index' %}" class="av-brand">
+        <img src="{% static 'web/img/logo.png' %}" alt="Artisans-Verse">
+        <span>Artisans-Verse</span>
+      </a>
+
+      <ul class="av-nav-links" id="av-dynamic-cats">
+        <li><a href="{% url 'index' %}" class="av-nav-link {% if request.resolver_match.url_name == 'index' %}is-active{% endif %}">Home</a></li>
+        <li><a href="{% url 'shop' %}" class="av-nav-link {% if request.resolver_match.url_name == 'shop' %}is-active{% endif %}">Shop</a></li>
+        <li><a href="{% url 'about' %}" class="av-nav-link {% if request.resolver_match.url_name == 'about' %}is-active{% endif %}">Our Story</a></li>
+        <li><a href="{% url 'contact' %}" class="av-nav-link {% if request.resolver_match.url_name == 'contact' %}is-active{% endif %}">Contact</a></li>
+      </ul>
+
+      <div class="av-nav-actions">
+        <a href="{% url 'cart' %}" class="av-icon-btn" aria-label="Shopping Cart" title="Cart" style="position:relative;">
+          <i class="fas fa-shopping-bag"></i>
+          <span data-cart-badge style="position:absolute; top:-4px; right:-4px; min-width:18px; height:18px; padding:0 5px; border-radius:999px; background:var(--av-primary); color:#fff; font-size:11px; font-weight:700; align-items:center; justify-content:center; display:{% if cart_count > 0 %}inline-flex{% else %}none{% endif %};">
+            {{ cart_count|default:0 }}
+          </span>
+        </a>
+
+        <div class="av-dropdown">
+          <button type="button" class="av-btn av-btn-outline av-btn-sm">
+            <i class="fas fa-user"></i>
+            <span>
+              {% if request.user.is_authenticated %}
+                {{ request.user.username }}
+              {% elif username %}
+                {{ username }}
+              {% else %}
+                Account
+              {% endif %}
+            </span>
+          </button>
+          <div class="av-dropdown-menu">
+            {% if request.user.is_authenticated or username %}
+              <a href="{% url 'dashboard' %}" class="av-dropdown-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+              <a href="{% url 'user_orders' %}" class="av-dropdown-item"><i class="fas fa-box"></i> My Orders</a>
+              <a href="{% url 'logout' %}" class="av-dropdown-item" style="color: var(--av-danger);"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+            {% else %}
+              <a href="{% url 'login' %}" class="av-dropdown-item"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+              <a href="{% url 'register' %}" class="av-dropdown-item"><i class="fas fa-user-plus"></i> Create Account</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <button type="button" class="av-icon-btn av-mobile-toggle" data-drawer-open="#av-mobile-drawer" aria-label="Open menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Slide-Over Drawer -->
+  <div class="av-drawer-backdrop" data-drawer-backdrop></div>
+  <aside class="av-drawer" id="av-mobile-drawer" aria-label="Mobile navigation">
+    <div style="display:flex; align-items:center; justify-content:space-between;">
+      <span class="av-display" style="font-size:20px;">Artisans-Verse</span>
+      <button type="button" class="av-icon-btn" data-drawer-close aria-label="Close menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <nav style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+      <a href="{% url 'index' %}" class="av-btn av-btn-ghost" style="justify-content:flex-start;">Home</a>
+      <a href="{% url 'shop' %}" class="av-btn av-btn-ghost" style="justify-content:flex-start;">Shop Catalog</a>
+      <a href="{% url 'about' %}" class="av-btn av-btn-ghost" style="justify-content:flex-start;">Our Story</a>
+      <a href="{% url 'contact' %}" class="av-btn av-btn-ghost" style="justify-content:flex-start;">Contact</a>
+      <a href="{% url 'cart' %}" class="av-btn av-btn-ghost" style="justify-content:flex-start;">Shopping Cart</a>
+      <hr style="border:none; border-top:1px solid var(--av-border); width:100%;">
+      {% if request.user.is_authenticated or username %}
+        <a href="{% url 'dashboard' %}" class="av-btn av-btn-primary">Open Dashboard</a>
+        <a href="{% url 'user_orders' %}" class="av-btn av-btn-outline">My Orders</a>
+        <a href="{% url 'logout' %}" class="av-btn av-btn-danger">Sign Out</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="av-btn av-btn-primary">Sign In</a>
+        <a href="{% url 'register' %}" class="av-btn av-btn-outline">Create Account</a>
+      {% endif %}
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Editorial Footer -->
+  <footer class="av-footer">
+    <div class="av-container">
+      <div class="av-grid av-grid-4" style="gap: 32px;">
+        <div>
+          <h4 class="av-display" style="font-size: 20px;">Artisans-Verse</h4>
+          <p style="font-size: 14px; color: rgba(233, 227, 216, 0.72);">
+            Connecting discerning homes with authentic, small-batch handcrafted goods made by local artisans.
+          </p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <ul style="list-style:none; padding:0; margin:0; display:grid; gap:8px; font-size:14px;">
+            <li><a href="{% url 'shop' %}">All Handcrafted Goods</a></li>
+            <li><a href="{% url 'about' %}">Artisan Story</a></li>
+            <li><a href="{% url 'contact' %}">Contact Studio</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Account</h4>
+          <ul style="list-style:none; padding:0; margin:0; display:grid; gap:8px; font-size:14px;">
+            {% if request.user.is_authenticated %}
+              <li><a href="{% url 'dashboard' %}">Artisan Dashboard</a></li>
+              <li><a href="{% url 'user_orders' %}">Order History</a></li>
+              <li><a href="{% url 'logout' %}">Sign Out</a></li>
+            {% else %}
+              <li><a href="{% url 'login' %}">Sign In</a></li>
+              <li><a href="{% url 'register' %}">Create Account</a></li>
+              <li><a href="{% url 'cart' %}">Shopping Bag</a></li>
+            {% endif %}
+          </ul>
+        </div>
+        <div>
+          <h4>Craft Promise</h4>
+          <p style="font-size: 14px; color: rgba(233, 227, 216, 0.72);">
+            Every piece is individually crafted, ethically sourced, and shipped directly from regional workshops.
+          </p>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,0.12); margin-top:36px; padding-top:20px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; font-size:13px; color:rgba(233,227,216,0.6);">
+        <span>&copy; {% now "Y" %} Artisans-Verse. Handcrafted with care.</span>
+        <span>Supporting Local Craft Collectives</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'artisans/js/artisans.js' %}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

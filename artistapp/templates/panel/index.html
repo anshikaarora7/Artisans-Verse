@@ -1,0 +1,302 @@
+{% extends "panel/basetemp.html" %}
+{% load static %}
+{% block title %}Artisans-Verse Dashboard{% endblock %}
+{% block content %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="av-alert av-alert-{{ message.tags|default:'info' }}" role="alert">
+      <span>{{ message }}</span>
+      <button type="button" class="av-alert-close" aria-label="Dismiss">&times;</button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:16px; margin-bottom:26px;" data-reveal>
+  <div>
+    <span class="av-eyebrow">Studio Overview</span>
+    <h1 style="font-size: clamp(1.7rem, 2.8vw, 2.3rem); margin-top:4px;">Artisans-Verse Dashboard</h1>
+    <p style="margin:4px 0 0; color:var(--av-ink-muted); font-size:14px;">
+      Welcome back, <strong>{{ username }}</strong>. Live handcrafted catalog, inventory, and payment insights.
+    </p>
+  </div>
+  <div style="display:flex; flex-wrap:wrap; gap:10px;">
+    <a href="{% url 'products' %}" class="av-btn av-btn-primary av-btn-sm">
+      <i class="fas fa-plus"></i> Add Product
+    </a>
+    <a href="{% url 'category' %}" class="av-btn av-btn-outline av-btn-sm">
+      <i class="fas fa-th-large"></i> Categories
+    </a>
+  </div>
+</div>
+
+<!-- Animated KPI Cards -->
+<div class="av-kpi-grid">
+  <div class="av-kpi-card" data-reveal style="--stagger:0;">
+    <div>
+      <div style="font-size:13px; color:var(--av-ink-muted); font-weight:600;">Handcrafted Products</div>
+      <div class="av-kpi-value" data-count-up="{{ total_products }}">{{ total_products }}</div>
+      <span class="av-badge av-badge-success">{{ active_products }} active</span>
+    </div>
+    <div class="av-kpi-icon" style="background:var(--av-primary-soft); color:var(--av-primary);">
+      <i class="fas fa-palette"></i>
+    </div>
+  </div>
+
+  <div class="av-kpi-card" data-reveal style="--stagger:1;">
+    <div>
+      <div style="font-size:13px; color:var(--av-ink-muted); font-weight:600;">Artisan Brands</div>
+      <div class="av-kpi-value" data-count-up="{{ total_brands }}">{{ total_brands }}</div>
+      <span class="av-badge av-badge-info">{{ total_categories }} categories</span>
+    </div>
+    <div class="av-kpi-icon" style="background:var(--av-info-soft); color:var(--av-info);">
+      <i class="fas fa-tags"></i>
+    </div>
+  </div>
+
+  <div class="av-kpi-card" data-reveal style="--stagger:2;">
+    <div>
+      <div style="font-size:13px; color:var(--av-ink-muted); font-weight:600;">Total Revenue</div>
+      <div class="av-kpi-value" data-count-up="{{ total_revenue }}" data-prefix="&#8377;">&#8377;{{ total_revenue }}</div>
+      <span class="av-badge av-badge-warning">{{ active_offers }} active offers</span>
+    </div>
+    <div class="av-kpi-icon" style="background:var(--av-success-soft); color:var(--av-success);">
+      <i class="fas fa-rupee-sign"></i>
+    </div>
+  </div>
+
+  <div class="av-kpi-card" data-reveal style="--stagger:3;">
+    <div>
+      <div style="font-size:13px; color:var(--av-ink-muted); font-weight:600;">Customer Orders</div>
+      <div class="av-kpi-value" data-count-up="{{ total_orders }}">{{ total_orders }}</div>
+      <span class="av-badge av-badge-warning">{{ pending_orders_count }} pending</span>
+    </div>
+    <div class="av-kpi-icon" style="background:var(--av-gold-soft); color:var(--av-warning);">
+      <i class="fas fa-shopping-bag"></i>
+    </div>
+  </div>
+</div>
+
+<!-- Main Dashboard Grid -->
+<div class="av-grid av-grid-3" style="align-items:start;">
+  <!-- Left 2 Columns: Products, Orders, Payments -->
+  <div style="grid-column: span 2; display:grid; gap:24px;">
+    <!-- Handcrafted Products with Live Filter & Stock Pills -->
+    <div class="av-card" data-reveal>
+      <div style="padding:18px 20px; border-bottom:1px solid var(--av-border); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px;">
+        <div>
+          <h2 style="font-size:19px;">Handcrafted Product Listings</h2>
+          <p style="margin:2px 0 0; font-size:13px; color:var(--av-ink-muted);">Filter by stock status, product, category, or artisan brand</p>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <button type="button" class="av-btn av-btn-primary av-btn-sm" data-filter-pill="all" data-pill-target="av-products-table">All</button>
+          <button type="button" class="av-btn av-btn-ghost av-btn-sm" data-filter-pill="in-stock" data-pill-target="av-products-table">In Stock</button>
+          <button type="button" class="av-btn av-btn-ghost av-btn-sm" data-filter-pill="low-stock" data-pill-target="av-products-table">Low Stock</button>
+          <input
+            type="search"
+            class="av-input"
+            placeholder="Search products..."
+            data-filter-table="av-products-table"
+            style="width:190px; padding:7px 12px;"
+          >
+        </div>
+      </div>
+
+      <div class="av-table-wrap">
+        <table class="av-table" id="av-products-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Artisan Brand</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for prod in recent_products %}
+              <tr data-filter-row data-stock-state="{% if prod.stock <= 5 %}low-stock{% else %}in-stock{% endif %}">
+                <td>
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <img
+                      src="{{ prod.image }}"
+                      alt="{{ prod.name }}"
+                      style="width:42px; height:42px; border-radius:8px; object-fit:cover;"
+                      onerror="this.src='{% static 'web/img/product/product-1.jpg' %}'"
+                    >
+                    <div>
+                      <div style="font-weight:600;">{{ prod.name }}</div>
+                      <div style="font-size:12px; color:var(--av-ink-muted);">{{ prod.created }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ prod.category }}</td>
+                <td>{{ prod.brand }}</td>
+                <td><strong>&#8377;{{ prod.price }}</strong></td>
+                <td>
+                  {% if prod.stock <= 5 %}
+                    <span class="av-badge av-badge-warning">{{ prod.stock }} left</span>
+                  {% else %}
+                    <span class="av-badge av-badge-success">{{ prod.stock }} in stock</span>
+                  {% endif %}
+                </td>
+                <td style="text-align:right;">
+                  <a href="{% url 'product_edit' prod.id %}" class="av-btn av-btn-ghost av-btn-sm">Edit</a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6" style="text-align:center; padding:32px; color:var(--av-ink-muted);">
+                  No handcrafted products added yet. <a href="{% url 'products' %}" style="color:var(--av-primary); font-weight:600;">Add your first product</a>.
+                </td>
+              </tr>
+            {% endfor %}
+            <tr data-filter-empty style="display:none;">
+              <td colspan="6" style="text-align:center; padding:24px; color:var(--av-ink-muted);">
+                No matching products found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recent Customer Orders & Payments -->
+    <div class="av-grid av-grid-2" style="gap:20px;">
+      <div class="av-card" data-reveal>
+        <div style="padding:16px 20px; border-bottom:1px solid var(--av-border);">
+          <h2 style="font-size:18px;">Recent Customer Orders</h2>
+        </div>
+        <div class="av-table-wrap">
+          <table class="av-table">
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Customer</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ord in recent_orders %}
+                <tr>
+                  <td><strong>#{{ ord.id }}</strong></td>
+                  <td style="font-size:13px;">{{ ord.customer_id }}</td>
+                  <td><strong>&#8377;{{ ord.order_amount }}</strong></td>
+                  <td>
+                    <span class="av-badge {% if ord.status == 'paid' or ord.status == 'ordered' %}av-badge-success{% elif ord.status == 'inprocess' %}av-badge-info{% else %}av-badge-warning{% endif %}">
+                      {{ ord.status|title }}
+                    </span>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4" style="text-align:center; padding:24px; color:var(--av-ink-muted);">No orders yet.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="av-card" data-reveal style="--stagger:1;">
+        <div style="padding:16px 20px; border-bottom:1px solid var(--av-border);">
+          <h2 style="font-size:18px;">Payments &amp; Settlements</h2>
+        </div>
+        <div class="av-table-wrap">
+          <table class="av-table">
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Method</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for pay in recent_payments %}
+                <tr>
+                  <td><strong>#{{ pay.order_id }}</strong></td>
+                  <td><span class="av-badge av-badge-info">{{ pay.payment_mode }}</span></td>
+                  <td><strong>&#8377;{{ pay.amount }}</strong></td>
+                  <td>
+                    <span class="av-badge {% if pay.status == 'Success' %}av-badge-success{% else %}av-badge-warning{% endif %}">
+                      {{ pay.status }}
+                    </span>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4" style="text-align:center; padding:24px; color:var(--av-ink-muted);">No payments recorded yet.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Category Breakdown, Quick Actions & Low Stock -->
+  <div style="display:grid; gap:24px;">
+    <div class="av-card" style="padding:20px;" data-reveal>
+      <h2 style="font-size:18px; margin-bottom:14px;">Craft Category Breakdown</h2>
+      {% for cat in category_stats %}
+        <div style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="font-weight:600;">{{ cat.name }}</span>
+            <span style="color:var(--av-ink-muted);">{{ cat.count }} items ({{ cat.pct }}%)</span>
+          </div>
+          <div style="height:7px; border-radius:999px; background:var(--av-surface-alt); overflow:hidden;">
+            <div style="width:{{ cat.pct }}%; height:100%; background:var(--av-primary); border-radius:999px; transition:width 600ms var(--av-ease);"></div>
+          </div>
+        </div>
+      {% empty %}
+        <p style="margin:0; font-size:13px; color:var(--av-ink-muted);">No categories yet.</p>
+      {% endfor %}
+    </div>
+
+    <div class="av-card" style="padding:20px;" data-reveal>
+      <h2 style="font-size:18px; margin-bottom:14px;">Quick Actions</h2>
+      <div style="display:grid; gap:10px;">
+        <a href="{% url 'products' %}" class="av-btn av-btn-outline av-btn-block" style="justify-content:flex-start;">
+          <i class="fas fa-palette" style="color:var(--av-primary);"></i> Manage Products
+        </a>
+        <a href="{% url 'category' %}" class="av-btn av-btn-outline av-btn-block" style="justify-content:flex-start;">
+          <i class="fas fa-th-large" style="color:var(--av-info);"></i> Manage Categories
+        </a>
+        <a href="{% url 'brands' %}" class="av-btn av-btn-outline av-btn-block" style="justify-content:flex-start;">
+          <i class="fas fa-tags" style="color:var(--av-success);"></i> Manage Artisan Brands
+        </a>
+        <a href="{% url 'offers' %}" class="av-btn av-btn-outline av-btn-block" style="justify-content:flex-start;">
+          <i class="fas fa-percent" style="color:var(--av-warning);"></i> Manage Offers
+        </a>
+        <a href="{% url 'shop' %}" class="av-btn av-btn-ghost av-btn-block" style="justify-content:flex-start;">
+          <i class="fas fa-store"></i> Preview Storefront
+        </a>
+      </div>
+    </div>
+
+    <div class="av-card" style="padding:20px;" data-reveal>
+      <h2 style="font-size:18px; margin-bottom:14px;">Low Stock Alerts</h2>
+      {% if low_stock_items %}
+        <div style="display:grid; gap:12px;">
+          {% for item in low_stock_items %}
+            <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:10px; border-bottom:1px solid var(--av-border);">
+              <div>
+                <div style="font-weight:600; font-size:14px;">{{ item.prod_name }}</div>
+                <div style="font-size:12px; color:var(--av-ink-muted);">{{ item.size }} &middot; &#8377;{{ item.price }}</div>
+              </div>
+              <span class="av-badge av-badge-danger">{{ item.quantity }} left</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p style="margin:0; font-size:14px; color:var(--av-ink-muted);">
+          All inventory items are well stocked ({{ total_inventory_units }} total units).
+        </p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block title %}{{ product.prod_name }} | Artisans-Verse{% endblock %}
+{% block content %}
+<section class="av-section" style="padding-block: 40px 72px;">
+  <div class="av-container">
+    <div style="margin-bottom: 20px; font-size:13px; color:var(--av-ink-muted);">
+      <a href="{% url 'index' %}">Home</a> / <a href="{% url 'shop' %}">Shop</a> / <span>{{ product.prod_name }}</span>
+    </div>
+
+    <div class="av-grid av-grid-2" style="gap: 40px; align-items: start;">
+      <!-- Product Gallery -->
+      <div data-reveal>
+        <div class="av-card" style="overflow:hidden;">
+          <div class="av-product-media" style="aspect-ratio: 4 / 4.2;">
+            <img id="av-main-prod-img" src="{{ product.image }}" alt="{{ product.prod_name }}" onerror="this.src='{% static 'web/img/product/product-1.jpg' %}'">
+          </div>
+        </div>
+        {% if images %}
+          <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+            {% for img in images %}
+              <button type="button" class="av-card" style="width:72px; height:72px; padding:0; cursor:pointer;" onclick="document.getElementById('av-main-prod-img').src='{{ img.path }}'">
+                <img src="{{ img.path }}" alt="Thumbnail" style="width:100%; height:100%; object-fit:cover;">
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Product Info & Add to Cart -->
+      <div data-reveal style="--stagger: 1;">
+        <span class="av-eyebrow">{{ product.brand }}</span>
+        <h1 style="font-size: clamp(1.8rem, 3vw, 2.5rem); margin: 8px 0 12px;">{{ product.prod_name }}</h1>
+        <div style="font-size: 26px; font-weight: 700; color: var(--av-primary); margin-bottom: 16px;" id="av-dynamic-price">
+          &#8377;{{ product.price|default:0 }}
+        </div>
+        <p style="color: var(--av-ink-muted); margin-bottom: 24px;">{{ product.describ }}</p>
+
+        <form method="POST" action="{% url 'cart' %}" data-ajax-cart>
+          {% csrf_token %}
+          <input type="hidden" name="prodid" value="{{ product.id }}">
+
+          {% if sizes %}
+            <div class="av-field">
+              <label for="sizeid" class="av-label">Select Size / Variant</label>
+              <select class="av-select" id="sizeid" name="sizeid" required>
+                {% for sz in sizes %}
+                  <option value="{{ sz.id }}" data-price="{{ sz.price }}" data-stock="{{ sz.quantity }}">
+                    {{ sz.size }} — &#8377;{{ sz.price }} ({{ sz.quantity }} available)
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          {% endif %}
+
+          <div class="av-field" style="max-width: 140px;">
+            <label for="quantity" class="av-label">Quantity</label>
+            <input type="number" class="av-input" id="quantity" name="quantity" value="1" min="1" max="20">
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top: 20px;">
+            <button type="submit" class="av-btn av-btn-primary">
+              <i class="fas fa-shopping-bag"></i> Add to Cart
+            </button>
+            <a href="{% url 'shop' %}" class="av-btn av-btn-outline">Continue Browsing</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+  const sizeSelect = document.getElementById('sizeid');
+  const priceDisplay = document.getElementById('av-dynamic-price');
+  if (sizeSelect && priceDisplay) {
+    sizeSelect.addEventListener('change', () => {
+      const opt = sizeSelect.options[sizeSelect.selectedIndex];
+      const p = opt.getAttribute('data-price');
+      if (p) priceDisplay.innerHTML = '&#8377;' + p;
+    });
+  }
+</script>
+{% endblock %}

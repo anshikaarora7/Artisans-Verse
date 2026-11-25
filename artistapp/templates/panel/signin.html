@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Sign In | Artisans-Verse</title>
+  <link rel="icon" type="image/png" href="{% static 'web/img/logo.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'artisans/css/artisans.css' %}">
+</head>
+<body>
+  <section class="av-auth-shell" style="min-height: 100vh;">
+    <div class="av-auth-visual">
+      <img src="{% static 'web/img/categories/category-1.jpg' %}" alt="Artisans-Verse Workshop">
+      <div class="av-auth-visual-content">
+        <a href="{% url 'index' %}" class="av-brand" style="color:#fff;">
+          <img src="{% static 'web/img/logo.png' %}" alt="Artisans-Verse">
+          <span>Artisans-Verse</span>
+        </a>
+      </div>
+      <div class="av-auth-visual-content">
+        <span class="av-eyebrow" style="color: var(--av-gold);">Artisan Operations</span>
+        <h2 style="color:#fff; font-size: clamp(1.9rem, 3vw, 2.6rem); margin: 10px 0 12px;">
+          Studio &amp; Inventory Control
+        </h2>
+        <p style="color: rgba(255,255,255,0.82); max-width: 40ch; margin:0;">
+          Curate handcrafted listings, manage regional craft brands, and monitor fulfillment in one place.
+        </p>
+      </div>
+    </div>
+
+    <div class="av-auth-panel">
+      <div class="av-auth-card" data-reveal>
+        <span class="av-eyebrow">Panel Access</span>
+        <h1 style="font-size: 28px; margin: 6px 0 6px;">Sign In</h1>
+        <p style="color: var(--av-ink-muted); font-size: 14px; margin-bottom: 22px;">
+          Enter your credentials to open the Artisan Dashboard
+        </p>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="av-alert av-alert-{{ message.tags|default:'info' }}" role="alert">
+              <span>{{ message }}</span>
+              <button type="button" class="av-alert-close" aria-label="Dismiss">&times;</button>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <form action="{% url 'signin' %}" method="POST" novalidate>
+          {% csrf_token %}
+          {% if next %}
+            <input type="hidden" name="next" value="{{ next }}">
+          {% endif %}
+
+          <div class="av-field">
+            <label for="username" class="av-label">Username or Email</label>
+            <input
+              type="text"
+              class="av-input"
+              id="username"
+              name="username"
+              value="{{ entered_identifier|default:'' }}"
+              placeholder="artisan_admin"
+              required
+              autofocus
+            >
+          </div>
+
+          <div class="av-field">
+            <label for="panel-password" class="av-label">Password</label>
+            <div class="av-input-wrap">
+              <input
+                type="password"
+                class="av-input av-input-has-toggle"
+                id="panel-password"
+                name="password"
+                placeholder="Enter your password"
+                required
+              >
+              <button type="button" class="av-pass-toggle" data-toggle-password="panel-password" aria-label="Show password">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="av-btn av-btn-primary av-btn-block">
+            Sign In <i class="fas fa-arrow-right"></i>
+          </button>
+
+          <div style="display:flex; justify-content:space-between; margin-top:18px; font-size:13px;">
+            <a href="{% url 'index' %}" style="color:var(--av-ink-muted);">&larr; Storefront</a>
+            <a href="{% url 'register' %}" style="color:var(--av-primary); font-weight:600;">Create Account</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script src="{% static 'artisans/js/artisans.js' %}"></script>
+</body>
+</html>

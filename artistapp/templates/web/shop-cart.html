@@ -1,0 +1,95 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block title %}Shopping Cart | Artisans-Verse{% endblock %}
+{% block content %}
+<section class="av-section" style="padding-block: 40px 72px;">
+  <div class="av-container">
+    <div style="margin-bottom:28px;" data-reveal>
+      <span class="av-eyebrow">Your Bag</span>
+      <h1 style="font-size: clamp(1.8rem, 3vw, 2.5rem); margin-top:6px;">Shopping Cart</h1>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="av-alert av-alert-{{ message.tags|default:'info' }}">
+          <span>{{ message }}</span>
+          <button type="button" class="av-alert-close">&times;</button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if cart_items %}
+      <div class="av-grid av-grid-3" style="align-items:start;">
+        <div class="av-card" style="grid-column: span 2;" data-reveal>
+          <div class="av-table-wrap">
+            <table class="av-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Size</th>
+                  <th>Price</th>
+                  <th>Qty</th>
+                  <th>Subtotal</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for cart in cart_items %}
+                  <tr data-cart-row>
+                    <td>
+                      <div style="display:flex; align-items:center; gap:12px;">
+                        <img src="{{ cart.8 }}" alt="{{ cart.3 }}" style="width:48px; height:48px; object-fit:cover; border-radius:8px;" onerror="this.src='{% static 'web/img/product/product-1.jpg' %}'">
+                        <a href="{% url 'shop_detail' cart.6 %}" style="font-weight:600;">{{ cart.3 }}</a>
+                      </div>
+                    </td>
+                    <td>{{ cart.5 }}</td>
+                    <td>&#8377;{{ cart.4 }}</td>
+                    <td>
+                      <div style="display:inline-flex; align-items:center; gap:8px; border:1px solid var(--av-border-strong); border-radius:999px; padding:3px 8px;">
+                        <button type="button" class="av-btn av-btn-ghost av-btn-sm" style="padding:2px 8px;" data-cart-action="dec" data-url="{% url 'update_cart' cart.0 %}" aria-label="Decrease quantity">&minus;</button>
+                        <strong data-item-qty style="min-width:18px; text-align:center;">{{ cart.1 }}</strong>
+                        <button type="button" class="av-btn av-btn-ghost av-btn-sm" style="padding:2px 8px;" data-cart-action="inc" data-url="{% url 'update_cart' cart.0 %}" aria-label="Increase quantity">+</button>
+                      </div>
+                    </td>
+                    <td><strong data-item-subtotal>&#8377;{{ cart.9 }}</strong></td>
+                    <td>
+                      <a href="{% url 'delete_cart' cart.0 %}" class="av-btn av-btn-danger av-btn-sm" data-cart-remove>Remove</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div style="padding:16px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+            <a href="{% url 'shop' %}" class="av-btn av-btn-outline av-btn-sm">Continue Shopping</a>
+            <a href="{% url 'clear_cart' %}" class="av-btn av-btn-ghost av-btn-sm">Clear Cart</a>
+          </div>
+        </div>
+
+        <div class="av-card" style="padding:24px;" data-reveal style="--stagger:1;">
+          <h3 style="font-size:20px; margin-bottom:16px;">Order Summary</h3>
+          <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <span style="color:var(--av-ink-muted);">Subtotal</span>
+            <strong id="av-cart-subtotal">&#8377;{{ sub_total }}</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:14px;">
+            <span style="color:var(--av-ink-muted);">Shipping</span>
+            <strong id="av-cart-shipping">&#8377;{{ shipping }}</strong>
+          </div>
+          <div style="border-top:1px solid var(--av-border); padding-top:14px; display:flex; justify-content:space-between; font-size:18px; margin-bottom:20px;">
+            <span>Total</span>
+            <strong id="av-cart-total" style="color:var(--av-primary);">&#8377;{{ total }}</strong>
+          </div>
+          <a href="{% url 'checkout' %}" class="av-btn av-btn-primary av-btn-block">Proceed to Checkout <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    {% else %}
+      <div class="av-card" style="padding:48px; text-align:center;" data-reveal>
+        <h3 style="margin-bottom:8px;">Your cart is empty</h3>
+        <p style="color:var(--av-ink-muted); margin-bottom:20px;">Explore small-batch handcrafted pieces from our local artisans.</p>
+        <a href="{% url 'shop' %}" class="av-btn av-btn-primary">Browse Collection</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

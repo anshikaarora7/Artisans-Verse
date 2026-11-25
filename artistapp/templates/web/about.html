@@ -1,0 +1,25 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block title %}Our Story | Artisans-Verse{% endblock %}
+{% block content %}
+<section class="av-section">
+  <div class="av-container">
+    <div class="av-grid av-grid-2" style="gap:40px; align-items:center;">
+      <div data-reveal>
+        <span class="av-eyebrow">Our Mission</span>
+        <h1 style="font-size: clamp(2rem, 3.6vw, 2.9rem); margin: 10px 0 18px;">Preserving regional craft through direct digital storefronts.</h1>
+        <p style="color:var(--av-ink-muted); margin-bottom:16px;">
+          Artisans-Verse partners with independent potters, handloom weavers, woodcarvers, and brass smiths to bring heirloom-quality goods directly to modern homes.
+        </p>
+        <p style="color:var(--av-ink-muted); margin-bottom:24px;">
+          Every purchase sustains fair workshop wages and keeps multi-generational techniques alive.
+        </p>
+        <a href="{% url 'shop' %}" class="av-btn av-btn-primary">Explore the Collection</a>
+      </div>
+      <div class="av-card" style="overflow:hidden;" data-reveal style="--stagger:1;">
+        <img src="{% static 'web/img/categories/category-1.jpg' %}" alt="Artisan Craft" style="width:100%; height:420px; object-fit:cover;">
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

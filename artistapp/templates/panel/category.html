@@ -1,0 +1,187 @@
+{% extends "panel/basetemp.html" %}
+{% load static  %}
+{% block title %}Home Page{% endblock  %}
+{% block content %}
+<div class="container">
+    <div class="page-inner">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+        >
+      <div>
+        <h3 class="fw-bold mb-3">Category</h3>
+        <h6 class="op-7 mb-2">Create Category </h6>
+      </div>
+     
+    </div>
+    <div class="row bg-white">
+
+        <div class="title text-center h3 my-3">Category Creation</div>
+        {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+        <form method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-light">
+            {% csrf_token %}
+            <div class="row g-3">
+                <!-- Category Name -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Category Name</label>
+                    <input type="text" class="form-control" name="catname" placeholder="Enter Category Name" required>
+                </div>
+                <!-- Category Description -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Category Description</label>
+                    <input type="text" class="form-control" name="catDescription" placeholder="Enter Description" required>
+                </div>
+                <!-- Parent Category -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Parent Category</label>
+                    <select class="form-select" name="catParent" id="catParent" onchange="getsubs(this.value)" required>
+                        <option value="">--Select Parent Category--</option>
+                        <option value="0">Parent</option>
+                    </select>
+                </div>
+                <!-- Sub Category -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Sub Category</label>
+                    <select class="form-select" name="subCategory" id="subCategory" required>
+                        <option value="0">None</option>
+                    </select>
+                </div>
+                <!-- Category Image -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Category Image</label>
+                    <input type="file" class="form-control" name="myfile">
+                </div>
+                <!-- Availability -->
+                <div class="col-md-6 d-flex align-items-center">
+                    <label class="form-label me-3 fw-semibold">Availability:</label>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="catAvailability" value="1" required checked>
+                        <label class="form-check-label">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="catAvailability" value="0" required>
+                        <label class="form-check-label">No</label>
+                    </div>
+                </div>
+                <!-- Submit Button -->
+                <div class="col-12 text-center mt-3">
+                    <button type="submit" class="btn btn-primary px-4">Create</button>
+                </div>
+            </div>
+        </form>        
+
+        <!-- Category Table -->
+        <div class="table-container mt-5">
+            <h4 class="text-center">Category List</h4>
+            <table class="table table-bordered table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Category Name</th>
+                        <th>Description</th>
+                        <th>Parent Category</th>
+                        <th>Sub Category</th>
+                        <th>Status</th>
+                        <th>Image</th>
+                        <th>Action</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    {% for row in category %}
+                    <tr>
+                        <td>{{ forloop.counter  }}</td>
+                        <td>{{ row.1 }}</td>
+                        <td>{{ row.2 }}</td>
+                        <td>{{ row.3|default:"None" }}</td>
+                        <td>{{ row.4|default:"None" }}</td>
+                        <td>{{ row.6|yesno:"Active,Inactive" }}</td>
+                        <td><img src="{{ row.5 }} " class="img-fluid" width="80px"></td>
+                        <td><a href="{% url 'category_edit' row.0 %}" class="btn btn-warning btn-sm">Edit</a>|<a href="{% url 'category_delete' row.0 %}" class="btn btn-danger btn-sm">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    function callparent(){
+        $.ajax({
+            url: "{% url 'parentcat' %}",
+            dataType: "JSON",
+            type: "GET",
+            success: function(response) {
+                var create = "<option value=''>Select Parent</option><option value='0'>Parent</option>";
+                $.each(response, function(index, parent) {
+                    create += "<option value='" + parent.id + "'>" + parent.cat_name + "</option>";
+                });
+                $("#catParent").html(create);
+            }
+        });
+    }
+    callparent();
+
+    function getsubs(value){
+        $.ajax({
+            url: "{% url 'sub_cat' %}",
+            data: { val: value }, 
+            dataType: "JSON",
+            type: "GET",
+            success: function(response) {
+                var create = "<option value=''>Select Sub Category</option><option value='0'>None</option>";
+                $.each(response, function(index, sub) {
+                    create += "<option value='" + sub.id + "'>" + sub.cat_name + "</option>";
+                });
+                $("#subCategory").html(create);
+            }
+        });
+    }
+    $(document).ready(function(){
+
+        {% if msgs %}
+        $.notify({
+            icon: 'icon-bell',
+            title: 'Dear Admin',
+            message: '{{msgs}}',
+          },{
+            type: 'secondary',
+            placement: {
+              from: "bottom",
+              align: "right"
+            },
+            time: 1000,
+          });
+        
+        {% endif %}
+
+        {% if messages %}
+    {% for message in messages %}
+        <script>
+            $.notify({
+                icon: 'icon-bell',
+                title: 'Dear Admin',
+                message: '{{ message }}',
+            },{
+                type: 'secondary',
+                placement: {
+                    from: "bottom",
+                    align: "right"
+                },
+                time: 1000,
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+    });
+</script>
+{% endblock %}

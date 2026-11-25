@@ -1,0 +1,44 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block title %}My Orders | Artisans-Verse{% endblock %}
+{% block content %}
+<section class="av-section" style="padding-block: 40px 72px;">
+  <div class="av-container">
+    <div style="margin-bottom:28px;" data-reveal>
+      <span class="av-eyebrow">Order History</span>
+      <h1 style="font-size: clamp(1.8rem, 3vw, 2.5rem); margin-top:6px;">My Orders</h1>
+    </div>
+
+    {% if orders %}
+      <div style="display:grid; gap:20px;">
+        {% for order_id, order in orders.items %}
+          <div class="av-card" style="padding:22px;" data-reveal>
+            <div style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; border-bottom:1px solid var(--av-border); padding-bottom:12px; margin-bottom:14px;">
+              <div>
+                <strong>Order #{{ order_id }}</strong>
+                <span style="color:var(--av-ink-muted); font-size:13px; margin-left:10px;">{{ order.order_date }}</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span class="av-badge av-badge-info">{{ order.status|title }}</span>
+                <strong style="color:var(--av-primary);">&#8377;{{ order.order_amount }}</strong>
+              </div>
+            </div>
+            {% for item in order.items %}
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-block:6px; font-size:14px;">
+                <span>{{ item.product }} ({{ item.size }}) &times; {{ item.quantity }}</span>
+                <strong>&#8377;{{ item.subtotal }}</strong>
+              </div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="av-card" style="padding:48px; text-align:center;" data-reveal>
+        <h3 style="margin-bottom:8px;">No orders placed yet</h3>
+        <p style="color:var(--av-ink-muted); margin-bottom:20px;">Your handcrafted purchases will appear here.</p>
+        <a href="{% url 'shop' %}" class="av-btn av-btn-primary">Explore Storefront</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

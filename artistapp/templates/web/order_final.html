@@ -1,0 +1,60 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block title %}Confirm Payment | Artisans-Verse{% endblock %}
+{% block content %}
+<section class="av-section" style="padding-block: 48px 72px;">
+  <div class="av-container" style="max-width: 720px;">
+    <div class="av-card" style="padding: clamp(24px, 4vw, 38px);" data-reveal>
+      <span class="av-eyebrow">Final Step</span>
+      <h1 style="font-size: clamp(1.7rem, 3vw, 2.3rem); margin: 6px 0 18px;">Complete Your Payment</h1>
+
+      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; padding:16px; border-radius:var(--av-radius-sm); background:var(--av-surface-alt); margin-bottom:24px;">
+        <div>
+          <div style="font-size:12px; color:var(--av-ink-muted); font-weight:600;">ORDER REFERENCE</div>
+          <strong>#{{ db_order_id }}</strong>
+        </div>
+        <div>
+          <div style="font-size:12px; color:var(--av-ink-muted); font-weight:600;">SELECTED METHOD</div>
+          <span class="av-badge av-badge-info">{{ payment_mode }}</span>
+        </div>
+        <div>
+          <div style="font-size:12px; color:var(--av-ink-muted); font-weight:600;">TOTAL PAYABLE</div>
+          <strong style="font-size:18px; color:var(--av-primary);">&#8377;{{ amount_rupees }}</strong>
+        </div>
+      </div>
+
+      {% if items %}
+        <div style="margin-bottom:24px;">
+          <h3 style="font-size:16px; margin-bottom:10px;">Items in Order</h3>
+          {% for item in items %}
+            <div style="display:flex; justify-content:space-between; padding-block:8px; border-bottom:1px solid var(--av-border); font-size:14px;">
+              <span>{{ item.3 }} ({{ item.5 }}) &times; {{ item.1 }}</span>
+              <strong>&#8377;{{ item.9 }}</strong>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="POST" action="{% url 'confirm_payment' %}">
+        {% csrf_token %}
+        <div class="av-field">
+          <label for="payment_mode" class="av-label">Confirm or Switch Payment Option</label>
+          <select class="av-select" id="payment_mode" name="payment_mode">
+            <option value="UPI" {% if payment_mode == 'UPI' %}selected{% endif %}>UPI (GPay / PhonePe / Paytm)</option>
+            <option value="Card" {% if payment_mode == 'Card' %}selected{% endif %}>Credit / Debit Card</option>
+            <option value="Net Banking" {% if payment_mode == 'Net Banking' %}selected{% endif %}>Net Banking</option>
+            <option value="Cash on Delivery" {% if payment_mode == 'Cash on Delivery' %}selected{% endif %}>Cash on Delivery</option>
+          </select>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:20px;">
+          <button type="submit" class="av-btn av-btn-primary">
+            <i class="fas fa-lock"></i> Confirm &amp; Place Order (&#8377;{{ amount_rupees }})
+          </button>
+          <a href="{% url 'checkout' %}" class="av-btn av-btn-outline">Back to Shipping</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

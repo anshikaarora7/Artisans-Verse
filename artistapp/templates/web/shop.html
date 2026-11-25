@@ -1,0 +1,55 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block title %}Shop Handcrafted Goods | Artisans-Verse{% endblock %}
+{% block content %}
+<section class="av-section" style="padding-block: 36px 64px;">
+  <div class="av-container">
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:16px; margin-bottom:28px;" data-reveal>
+      <div>
+        <span class="av-eyebrow">Curated Catalog</span>
+        <h1 style="font-size: clamp(1.9rem, 3.4vw, 2.7rem); margin-top:6px;">Handcrafted Collection</h1>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <a href="{% url 'shop' %}" class="av-btn av-btn-outline av-btn-sm">All</a>
+        {% for cat in categorys %}
+          <a href="{% url 'shop_parent' cat.id %}" class="av-btn av-btn-ghost av-btn-sm">{{ cat.cat_name }}</a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="av-grid av-grid-4">
+      {% for product in products %}
+        <div class="av-card av-card-hover" data-reveal style="--stagger: {{ forloop.counter0 }}; display:flex; flex-direction:column;">
+          <a href="{% url 'shop_detail' product.id %}" class="av-product-media">
+            <img src="{{ product.image }}" alt="{{ product.prod_name }}" onerror="this.src='{% static 'web/img/product/product-1.jpg' %}'">
+            <span class="av-product-badge">Artisan Made</span>
+          </a>
+          <div class="av-product-body" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+            <div>
+              <a href="{% url 'shop_detail' product.id %}"><h3 class="av-product-title">{{ product.prod_name }}</h3></a>
+              <div class="av-product-meta">
+                <span class="av-price">&#8377;{{ product.price|default:0 }}</span>
+                <span style="color:var(--av-gold); font-size:13px;"><i class="fas fa-star"></i> {{ product.stars }}</span>
+              </div>
+            </div>
+            <form method="POST" action="{% url 'cart' %}" data-ajax-cart>
+              {% csrf_token %}
+              <input type="hidden" name="prodid" value="{{ product.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="av-btn av-btn-primary av-btn-sm av-btn-block">
+                <i class="fas fa-shopping-bag"></i> Add to Cart
+              </button>
+            </form>
+          </div>
+        </div>
+      {% empty %}
+        <div class="av-card" style="padding:40px; grid-column: 1 / -1; text-align:center;">
+          <h3 style="margin-bottom:8px;">No products found in this collection</h3>
+          <p style="color:var(--av-ink-muted); margin-bottom:16px;">Try viewing all handcrafted items or add new items from the dashboard.</p>
+          <a href="{% url 'shop' %}" class="av-btn av-btn-primary av-btn-sm">View All Products</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
